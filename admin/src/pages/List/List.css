@@ -1,191 +1,308 @@
-.list-table-format {
-    font-size: 14px;
-    padding: 10px 12px;
-    border: 1px solid #cacaca;
-    display: grid;
-    grid-template-columns: 0.5fr 2fr 1fr 1fr 0.5fr;
-
-}
-
+```css
 /* Main list container */
 .list {
-  width: 100%;
-  max-width: 1200px;
-  padding: 24px;
-  margin: 0 auto;
-  box-sizing: border-box;
-  color: #444;
+    width: 100%;
+    max-width: 1200px;
+    min-width: 0;
+    padding: 24px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    color: #444;
 }
 
-.list > p {
-  margin: 0 0 20px;
-  font-size: 22px;
-  font-weight: 600;
+.list-heading {
+    margin: 0 0 20px;
+    font-size: 22px;
+    font-weight: 600;
 }
 
-/* List table */
+/* Search bar */
+.list-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 650px;
+    margin-bottom: 24px;
+}
+
+.search-input-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+}
+
+.search-input-wrapper input {
+    width: 100%;
+    padding: 12px 42px 12px 14px;
+    box-sizing: border-box;
+    border: 1px solid #cacaca;
+    border-radius: 6px;
+    outline: none;
+    font-size: 14px;
+    background: #fff;
+    color: #333;
+}
+
+.search-input-wrapper input:focus {
+    border-color: tomato;
+    box-shadow: 0 0 0 2px rgba(255, 99, 71, 0.12);
+}
+
+.search-icon {
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.search-btn,
+.clear-btn {
+    padding: 12px 18px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.search-btn {
+    background: tomato;
+}
+
+.clear-btn {
+    background: #666;
+}
+
+.search-btn:hover,
+.clear-btn:hover {
+    opacity: 0.85;
+}
+
+/* Product table: horizontal scrolling on narrow screens */
 .list-table {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  overflow-x: auto;
-  border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    border-radius: 8px;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* Header and food rows */
+/* Shared grid for headers and product rows */
 .list-table-format {
-  display: grid;
-  grid-template-columns: 80px minmax(0, 1fr) 100px 65px;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid #e5e5e5;
-  border-bottom: none;
-  box-sizing: border-box;
-  font-size: 14px;
+    display: grid;
+    grid-template-columns: 80px minmax(0, 1fr) 100px 65px;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    min-width: 380px;
+    padding: 14px 16px;
+    box-sizing: border-box;
+    border: 1px solid #e5e5e5;
+    border-bottom: none;
+    font-size: 14px;
 }
 
 .list-table-format:last-child {
-  border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
 }
 
+/* Headers always remain visible */
 .list-table-format.title {
-  background-color: #f7f7f7;
-  font-weight: 600;
-  color: #333;
+    display: grid;
+    background: #f7f7f7;
+    color: #333;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .list-table-format p,
 .list-table-format b {
-  margin: 0;
-  min-width: 0;
-  overflow-wrap: anywhere;
+    margin: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .list-table-format img {
-  display: block;
-  width: 60px;
-  height: 55px;
-  object-fit: cover;
-  border-radius: 6px;
+    display: block;
+    width: 60px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 6px;
 }
 
-/* Price */
-.list-table-format p:nth-child(3) {
-  font-weight: 500;
+.product-name {
+    font-weight: 500;
 }
 
-/* Delete action */
-.list-table-format .cursor {
-  justify-self: center;
-  color: #e04444;
-  font-size: 22px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: color 0.2s ease;
+.product-price {
+    font-weight: 500;
+    overflow-wrap: anywhere;
 }
 
-.list-table-format .cursor:hover {
-  color: #a90000;
+/* Delete button */
+.delete-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-self: center;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 5px;
+    background: #fff0ed;
+    color: #e04444;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.delete-btn:hover {
+    background: #ffdcd5;
+    color: #a90000;
+}
+
+/* No search results */
+.no-products {
+    min-width: 380px;
+    padding: 28px 12px;
+    box-sizing: border-box;
+    border: 1px solid #e5e5e5;
+    color: #777;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Product count */
+.product-count {
+    margin: 14px 0 0;
+    color: #777;
+    font-size: 13px;
 }
 
 /* Tablet */
 @media (max-width: 900px) {
-  .list {
-    padding: 20px;
-  }
+    .list {
+        padding: 20px;
+    }
 
-  .list-table-format {
-    grid-template-columns: 65px minmax(0, 1fr) 85px 40px;
-    gap: 12px;
-    padding: 12px;
-    font-size: 13px;
-  }
+    .list-table-format {
+        grid-template-columns: 65px minmax(0, 1fr) 85px 40px;
+        gap: 12px;
+        padding: 12px;
+        min-width: 340px;
+        font-size: 13px;
+    }
 
-  .list-table-format img {
-    width: 55px;
-    height: 50px;
-  }
+    .list-table-format img {
+        width: 55px;
+        height: 50px;
+    }
 }
 
 /* Mobile */
 @media (max-width: 600px) {
-  .list {
-    padding: 14px;
-  }
+    .list {
+        padding: 10px;
+    }
 
-  .list > p {
-    margin-bottom: 16px;
-    font-size: 19px;
-  }
+    .list-heading {
+        margin-bottom: 16px;
+        font-size: 19px;
+    }
 
-  .list-table {
-    overflow-x: hidden;
-  }
+    .list-search {
+        gap: 7px;
+        margin-bottom: 18px;
+    }
 
-  .list-table-format {
-    grid-template-columns: 52px minmax(0, 1fr) 65px 24px;
-    gap: 8px;
-    padding: 11px 8px;
-    font-size: 12px;
-  }
+    .search-input-wrapper input {
+        padding: 11px 34px 11px 10px;
+        font-size: 13px;
+    }
 
-  .list-table-format.title {
-    display: none;
-  }
+    .search-btn,
+    .clear-btn {
+        padding: 11px 10px;
+        font-size: 12px;
+    }
 
-  .list-table-format img {
-    width: 48px;
-    height: 48px;
-  }
-
-  .list-table-format .cursor {
-    font-size: 20px;
-  }
-}
-
-/* Extra-small mobile screens */
-@media (max-width: 360px) {
-  .list {
-    padding: 8px;
-  }
-
-  .list-table-format {
-    grid-template-columns: 42px minmax(0, 1fr) 52px 18px;
-    gap: 6px;
-    padding: 9px 5px;
-    font-size: 11px;
-  }
-
-  .list-table-format img {
-    width: 40px;
-    height: 40px;
-  }
-
-  .list-table-format .cursor {
-    font-size: 18px;
-  }
-}
-
-.list-table-format.title {
-    background-color: #f9f9f9;
-}
-
-.list-table-format img {
-    width: 50px;
-}
-
-@media(max-width:600px) {
     .list-table-format {
-        grid-template-columns: 1fr 3fr 1fr;
+        grid-template-columns: 48px minmax(90px, 1fr) 65px 30px;
+        gap: 7px;
+        padding: 10px 6px;
+        min-width: 320px;
+        font-size: 11px;
     }
 
+    /* Explicitly show all four column headings */
     .list-table-format.title {
-        display: none;
+        display: grid;
+        font-size: 11px;
+        background: #f7f7f7;
+    }
+
+    .list-table-format img {
+        width: 42px;
+        height: 42px;
+    }
+
+    .delete-btn {
+        width: 27px;
+        height: 27px;
+        font-size: 20px;
     }
 }
 
-.cursor {
-    cursor: pointer;
+/* Extra-small phones */
+@media (max-width: 360px) {
+    .list {
+        padding: 8px;
+    }
+
+    .list-search {
+        flex-wrap: wrap;
+    }
+
+    .search-input-wrapper {
+        flex-basis: 100%;
+    }
+
+    .search-btn,
+    .clear-btn {
+        flex: 1;
+    }
+
+    .list-table-format {
+        grid-template-columns: 42px minmax(90px, 1fr) 58px 30px;
+        gap: 5px;
+        padding: 9px 5px;
+        min-width: 300px;
+        font-size: 10px;
+    }
+
+    /* Headers remain visible on extra-small screens too */
+    .list-table-format.title {
+        display: grid;
+    }
+
+    .list-table-format img {
+        width: 38px;
+        height: 38px;
+    }
+
+    .delete-btn {
+        width: 25px;
+        height: 25px;
+        font-size: 18px;
+    }
 }
+```
