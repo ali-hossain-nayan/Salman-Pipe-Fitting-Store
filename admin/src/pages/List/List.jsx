@@ -7,60 +7,71 @@ import { toast } from 'react-toastify'
 const List = ({ baseURL }) => {
     const [listItem, setListItem] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
+    const [loading, setLoading] = useState(true)
 
     // Fetch all products from the backend
     const fetchFoodList = async () => {
         try {
-            const callApi = await axios.get(
+            setLoading(true)
+
+            const response = await axios.get(
                 `${baseURL}/api/food/list`
             )
 
-            if (callApi.data.success) {
-                setListItem(callApi.data.data)
+            if (response.data.success) {
+                setListItem(response.data.data || [])
             } else {
-                toast.error('Something went wrong!')
+                toast.error('Failed to load products.')
             }
         } catch (error) {
-            console.error('Fetch products error:', error)
-            toast.error('Failed to fetch products!')
+            console.error(
+                'Fetch products error:',
+                error.response?.data || error.message
+            )
+            toast.error('Failed to fetch products. Please try again.')
+        } finally {
+            setLoading(false)
         }
     }
 
     useEffect(() => {
         fetchFoodList()
-    }, [])
+    }, [baseURL])
 
     // Delete a product
     const removeFood = async (foodId) => {
         try {
-            const callApi = await axios.post(
+            const response = await axios.post(
                 `${baseURL}/api/food/remove`,
                 { id: foodId }
             )
 
-            if (callApi.data.success) {
-                toast.success(callApi.data.message)
+            if (response.data.success) {
+                toast.success(
+                    response.data.message || 'Product deleted successfully.'
+                )
                 await fetchFoodList()
             } else {
-                toast.error('Failed to delete product!')
+                toast.error(
+                    response.data.message || 'Failed to delete product.'
+                )
             }
         } catch (error) {
-            console.error('Delete product error:', error)
-            toast.error('Failed to delete product!')
+            console.error(
+                'Delete product error:',
+                error.response?.data || error.message
+            )
+            toast.error('Failed to delete product.')
         }
     }
 
     // Filter products by name
     const filteredItems = listItem.filter((item) =>
-        item.name
-            ?.toLowerCase()
-            .includes(searchTerm.trim().toLowerCase())
+        item.name?.toLowerCase().includes(searchTerm.trim().toLowerCase())
     )
 
     return (
         <div className="list add flex-col">
-
-            {/* Page heading */}
             <p className="list-heading">All Menu List</p>
 
             {/* Search section */}
@@ -100,8 +111,6 @@ const List = ({ baseURL }) => {
 
             {/* Product list */}
             <div className="list-table">
-
-                {/* Table heading */}
                 <div className="list-table-format title">
                     <b>Image</b>
                     <b>Description</b>
@@ -109,8 +118,9 @@ const List = ({ baseURL }) => {
                     <b>Action</b>
                 </div>
 
-                {/* Filtered products */}
-                {filteredItems.length > 0 ? (
+                {loading ? (
+                    <div className="no-products">Loading products...</div>
+                ) : filteredItems.length > 0 ? (
                     filteredItems.map((item) => (
                         <div
                             key={item._id}
@@ -118,7 +128,11 @@ const List = ({ baseURL }) => {
                         >
                             <img
                                 src={`${baseURL}/images/${item.image}`}
-                                alt={item.name}
+                                alt={item.name || 'Product'}
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null
+                                    e.currentTarget.style.visibility = 'hidden'
+                                }}
                             />
 
                             <p className="product-name">
@@ -147,14 +161,11 @@ const List = ({ baseURL }) => {
                             : 'No products available.'}
                     </div>
                 )}
-
             </div>
 
-            {/* Product count */}
             <p className="product-count">
                 Showing {filteredItems.length} of {listItem.length} products
             </p>
-
         </div>
     )
 }

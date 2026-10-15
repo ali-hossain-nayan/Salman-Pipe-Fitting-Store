@@ -8,20 +8,22 @@ import Orders from './pages/Orders/Orders'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-
 const App = () => {
-  const baseURL = 'https://salman-pipe-fitting-store.onrender.com/'
+  const baseURL = 'https://salman-pipe-fitting-store.onrender.com'
+
   return (
     <div>
       <ToastContainer />
       <Navbar />
       <hr />
+
       <div className="app-content">
         <Sidebar />
+
         <Routes>
-          <Route path='/add' element={<Add baseURL={baseURL} />} />
-          <Route path='/list' element={<List baseURL={baseURL} />} />
-          <Route path='/order' element={<Orders baseURL={baseURL} />} />
+          <Route path="/add" element={<Add baseURL={baseURL} />} />
+          <Route path="/list" element={<List baseURL={baseURL} />} />
+          <Route path="/order" element={<Orders baseURL={baseURL} />} />
         </Routes>
       </div>
     </div>
