@@ -1,42 +1,52 @@
-import express from 'express'
-import cors from 'cors'
-import { connectDB } from './config/db.js'
-import foodRouter from './routes/foodRoute.js'
-import userRouter from './routes/userRoute.js'
-import 'dotenv/config'
-import cartRouter from './routes/cartRoute.js'
-import orderRouter from './routes/orderRoute.js'
-// db->model->controller->routess
-// app config
-const app = express()
-const port = process.env.PORT || 4000
+import express from 'express';
+import cors from 'cors';
+import 'dotenv/config';
 
+import { connectDB } from './config/db.js';
+import foodRouter from './routes/foodRoute.js';
+import userRouter from './routes/userRoute.js';
+import cartRouter from './routes/cartRoute.js';
+import orderRouter from './routes/orderRoute.js';
 
-// middleware
-app.use(express.json())//connectivity with json form mate fornt-backend
-app.use(cors())//access frontend from any server
+const app = express();
+const port = process.env.PORT || 4000;
 
-// DB Connection
-connectDB();
+app.use(express.json());
+app.use(cors());
 
+// Connect to MongoDB once and wait for the connection before handling requests.
+const dbConnection = connectDB();
 
+app.use(async (req, res, next) => {
+    try {
+        await dbConnection;
+        next();
+    } catch (error) {
+        console.error('Database connection failed:', error.message);
+        res.status(503).json({
+            success: false,
+            message: 'Database connection unavailable'
+        });
+    }
+});
 
-// api endpoints
-app.use('/api/food', foodRouter)
-app.use('/images', express.static('uploads'))
+// API routes
+app.use('/api/food', foodRouter);
+app.use('/images', express.static('uploads'));
 app.use('/api/user', userRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/order', orderRouter);
 
-
-
-
-
 app.get('/', (req, res) => {
-    res.send('API is Working...')
-})
+    res.send('API is Working!');
+});
 
-app.listen(port, () => {
-    console.log(`Server started on http://localhost:${port}`)
-})
-// mongodb+srv://aliNayan:01690205129@cluster0.rzcnd.mongodb.net/?
+// Export the Express app for Vercel.
+export default app;
+
+// Start a local server when running on your computer.
+if (!process.env.VERCEL) {
+    app.listen(port, '0.0.0.0', () => {
+        console.log(`Server started on http://localhost:${port}`);
+    });
+}

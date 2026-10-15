@@ -8,19 +8,36 @@
 
 import mongoose from "mongoose";
 
+let connectionPromise = null;
+
 export const connectDB = async () => {
-    try {
-        const mongoURI = process.env.MONGO_URI;
-
-        if (!mongoURI) {
-            throw new Error("MONGODB_URI is not configured");
-        }
-
-        await mongoose.connect(mongoURI);
-
-        console.log("DB Connected Successfully...");
-    } catch (error) {
-        console.error("Database connection failed:", error.message);
-        throw error;
+    // Reuse an existing MongoDB connection.
+    if (mongoose.connection.readyState === 1) {
+        return mongoose.connection;
     }
+
+    // Reuse an ongoing connection attempt.
+    if (connectionPromise) {
+        return connectionPromise;
+    }
+
+    const mongoURI = process.env.MONGO_URI;
+
+    if (!mongoURI) {
+        throw new Error("MONGO_URI environment variable is not configured");
+    }
+
+    connectionPromise = mongoose
+        .connect(mongoURI)
+        .then(() => {
+            console.log("DB Connected Successfully...");
+            return mongoose.connection;
+        })
+        .catch((error) => {
+            connectionPromise = null;
+            console.error("Database connection failed:", error.message);
+            throw error;
+        });
+
+    return connectionPromise;
 };
