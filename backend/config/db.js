@@ -10,12 +10,17 @@ import mongoose from "mongoose";
 
 export const connectDB = async () => {
     try {
-        await mongoose.connect(
-            "mongodb+srv://aliNayan:01690205129@cluster0.ztkli.mongodb.net/khaiDai"
-        );
+        const mongoURI = process.env.MONGO_URI;
+
+        if (!mongoURI) {
+            throw new Error("MONGODB_URI is not configured");
+        }
+
+        await mongoose.connect(mongoURI);
 
         console.log("DB Connected Successfully...");
     } catch (error) {
         console.error("Database connection failed:", error.message);
+        throw error;
     }
 };
