@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css'
 
 
 const App = () => {
-  const baseURL = 'http://localhost:4000'
+  const baseURL = 'https://salman-pipe-fitting-store.onrender.com/'
   return (
     <div>
       <ToastContainer />
