@@ -72,7 +72,7 @@ const List = ({ baseURL }) => {
 
     return (
         <div className="list add flex-col">
-            <p className="list-heading">All Menu List</p>
+            <p className="list-heading">All Porduct List</p>
 
             {/* Search section */}
             <div className="list-search">

@@ -1,7 +1,7 @@
-import logo from './logo.png'
+import jamil_logo from './jamil-logo.jpg'
 import add_icon from './add_icon.png'
 import order_icon from './order_icon.png'
-import profile_image from './profile_image.png'
+import owner_image from './owner.jpeg'
 import upload_area from './upload_area.png'
 import parcel_icon from './parcel_icon.png'
 import search_icon from './search_icon.png'
@@ -56,10 +56,10 @@ export const assets = {
     facebook_icon,
     linkedin_icon,
     twitter_icon,
-    logo,
+    jamil_logo,
     add_icon,
     order_icon,
-    profile_image,
+    owner_image,
     search_icon,
     upload_area,
     parcel_icon,
