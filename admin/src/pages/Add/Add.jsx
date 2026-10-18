@@ -34,22 +34,26 @@ const Add = ({ baseURL }) => {
             return
         }
 
-        if (data.price === '' || Number(data.price) < 0) {
+        if (
+            data.price === '' ||
+            !Number.isFinite(Number(data.price)) ||
+            Number(data.price) < 0
+        ) {
             toast.error('Please enter a valid price.')
             return
         }
 
-        if (!image) {
-            toast.error('Please select a product image.')
-            return
-        }
-
         const formData = new FormData()
+
         formData.append('name', data.name.trim())
         formData.append('description', data.description)
         formData.append('price', Number(data.price))
         formData.append('category', data.category)
-        formData.append('image', image)
+
+        // Image is optional
+        if (image) {
+            formData.append('image', image)
+        }
 
         try {
             setLoading(true)
@@ -61,13 +65,13 @@ const Add = ({ baseURL }) => {
 
             if (response.data.success) {
                 toast.success(
-                    response.data.message || 'Product added successfully.'
+                    response.data.message ||
+                    'Product added successfully.'
                 )
 
                 setData(initialData)
                 setImage(null)
 
-                // Reset the file input
                 const fileInput = document.getElementById('image')
                 if (fileInput) fileInput.value = ''
             } else {
@@ -94,7 +98,7 @@ const Add = ({ baseURL }) => {
         <div className="add">
             <form className="flex-col" onSubmit={handleSubmit}>
                 <div className="add-img-upload flex-col">
-                    <p>Upload Image</p>
+                    <p>Upload Image (Optional)</p>
 
                     <label htmlFor="image">
                         <img
@@ -103,7 +107,11 @@ const Add = ({ baseURL }) => {
                                     ? URL.createObjectURL(image)
                                     : assets.upload_area
                             }
-                            alt={image ? image.name : 'Upload product'}
+                            alt={
+                                image
+                                    ? image.name
+                                    : 'Upload product image (optional)'
+                            }
                         />
                     </label>
 
@@ -115,24 +123,37 @@ const Add = ({ baseURL }) => {
                         id="image"
                         accept="image/*"
                         hidden
-                        required
                     />
+
+                    {image && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setImage(null)
+                                const fileInput =
+                                    document.getElementById('image')
+                                if (fileInput) fileInput.value = ''
+                            }}
+                        >
+                            Remove Image
+                        </button>
+                    )}
                 </div>
 
                 <div className="add-product-name flex-col">
-                    <p>Product Description</p>
+                    <p>Product Name</p>
                     <input
                         onChange={onChangeHandler}
                         value={data.name}
                         type="text"
                         name="name"
-                        placeholder="Enter product description"
+                        placeholder="Enter product name"
                         required
                     />
                 </div>
 
-                {/* <div className="add-category-description flex-col">
-                    <p>Product Description</p>
+                <div className="add-category-description flex-col">
+                    <p>Product Description (Optional)</p>
                     <textarea
                         onChange={onChangeHandler}
                         value={data.description}
@@ -140,10 +161,10 @@ const Add = ({ baseURL }) => {
                         rows="4"
                         placeholder="Write product description"
                     />
-                </div> */}
+                </div>
 
                 <div className="add-category-price">
-                    {/* <div className="add-category flex-col">
+                    <div className="add-category flex-col">
                         <p>Product Category</p>
 
                         <select
@@ -161,7 +182,7 @@ const Add = ({ baseURL }) => {
                             <option value="Pasta">Pasta</option>
                             <option value="Noodles">Noodles</option>
                         </select>
-                    </div> */}
+                    </div>
 
                     <div className="add-price flex-col">
                         <p>Sell Price</p>
